@@ -1,0 +1,253 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.8in,
+		right=0.8in,
+		top=0.9in,
+		bottom=0.5in}
+	
+	\begin{multicols}{2}
+		\begin{title-box}{green!70!white}
+			{\raggedright \large \textbf{Series y sucesiones: Series geométricas} \par}
+			
+			\vspace{2mm}
+			
+			\begin{title-sign}\end{title-sign}
+			
+			\vspace{5mm}
+			
+			\emoji{four-leaf-clover} Una guía para que converja. \emoji{four-leaf-clover}
+		\end{title-box}
+		
+		\vfill
+		
+		\begin{formula-box}
+			{\raggedright \large \textbf{Antes de comenzar} \par}
+			
+			Estas son series muy simples, donde cada termino se obtiene multiplicando el anterior por una razón constante $r$:
+			\[
+			\begin{cases}
+				a_n = ra_{n-1}\\
+				a_0 = b
+			\end{cases}
+			\]
+			Esta serie es divergente si:
+			\[
+			|r| \geq 1
+			\]
+		\end{formula-box}
+		
+		\begin{formula-box}
+			{\raggedright \large \textbf{Hallando la formula $a_n$} \par}
+			
+			Para esta operación se tiene en cuent la forma espandida de la serie:
+			
+			\[
+			\sum_{n=0}^{\infty}r^n = y = 1 + r + r^2 ... + r^n
+			\]
+			
+			Luego se hace una multiplicación y se restan las dos expansiones para que colapsen:
+			
+			\[
+			\begin{array}{c}
+				yr = r + r^2 + r^3 ... + r^n + r^{n+1} \\
+				y = 1 + r + r^2 ... + r^n \\
+				y - yr = 1 + r^{n+1} \\
+				y(1 - r) = 1 + r^{n+1} \\
+				y = \frac{1 + r^{n+1}}{1-r}
+			\end{array}
+			\]
+			
+			Y analizando los casos de $r^n$ podemos encontrar una fórmula final muy simple:
+			
+			\[
+			\begin{cases}
+				|r| < 1 \Rightarrow 0 \\
+				r > 1 \Rightarrow \infty \\
+				r = 1 \Rightarrow 1 \\
+				r \leq -1 \Rightarrow NaN
+			\end{cases}
+			\]
+			
+			\[
+			\sum_{n=0}^{\infty}r^n = \frac{1}{1-r}, |r| < 1
+			\]
+			
+		\end{formula-box}
+		
+		\columnbreak
+		
+		\begin{cut-me-box}
+			{\raggedright \large \textbf{Ahora a practicar} \par}
+			
+			\[
+			\sum_{n=1}^{\infty} 4(\frac{2}{3})^n
+			\]
+			
+			Sacamos constante y trabajamos facilmente:
+			
+			\[
+			\sum_{n=1}^{\infty} 4(\frac{2}{3})^n =
+			4 \sum_{n=1}^{\infty} (\frac{2}{3})^n
+			\]
+			
+			Luego cambiamos los índices y ajustamos para trabajar con la fórmula anterior:
+			
+			\[
+			4 \sum_{n=1}^{\infty} (\frac{2}{3})^n = 4 (\sum_{n=0}^{\infty} (\frac{2}{3})^n - (\frac{2}{3})^0)
+			\]
+			
+			Y ahora sí, reemplazamos nuestra fórmula general:
+			
+			\[
+			\begin{array}{c}
+				c = 4( \frac{1}{1-r} - 1) \\
+				c = 4( \frac{1}{1-2/3} - 1) \\
+				c = 4( 3 - 1) = 8
+			\end{array}
+			\]
+			
+			\[
+			\sum_{n=1}^{\infty} ( 2^{-n} + 3^{-n} )
+			\]
+			
+			Parece dificil, pero podemos trabajarla para que mejore:
+			
+			\[
+			y = \sum_{n=1}^{\infty} ( 2^{-n} + 3^{-n} ) = \sum_{n=1}^{\infty} (\frac{1}{2})^n + \sum_{n=1}^{\infty} (\frac{1}{3})^n
+			\]
+			
+			Y seguido de esto cambiamos los índices:
+			
+			\[
+			\frac{1}{2} \sum_{n=0}^{\infty} (\frac{1}{2})^n + \frac{1}{3} \sum_{n=0}^{\infty} (\frac{1}{3})^n
+			\]
+			
+			Y ya queda esto bien pelado:
+			
+			\[
+			\begin{array}{c}
+				c = \frac{1}{2}( \frac{1}{1-1/2} ) + \frac{1}{3}( \frac{1}{1 - 1/3} ) \\
+				c = 1 + 1/2 = 3/2
+			\end{array}
+			\]
+			
+		\end{cut-me-box}
+	\end{multicols}
+	
+\end{document}

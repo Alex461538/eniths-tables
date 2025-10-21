@@ -1,0 +1,236 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.8in,
+		right=0.8in,
+		top=0.9in,
+		bottom=0.5in}
+	
+	{\centering \section*{Arquitectura de computadores: caché}}
+	
+	La memoria caché permite aumentar la velocidad de nuestros programas, pues la memoria RAM es muy lenta. En esencia, la caché es una memoria intermedia, más cercana a la CPU, que permite guardar temporalmente porciones de la memoria principal (bloques) mientras son usadas y así disminuir los accesos a la memoria principal.
+	
+	\setcounter{section}{0}
+	
+	\begin{multicols}{2}
+		\section{Mapeo de cache}
+		
+		Se refiere a las formas que existen de interpretar las direcciones en memoria para situar sus bloques en la cache.
+		
+		En una cache de N lineas y un tamaño de bloque S donde N y S son potencias de 2 se tienen los siguientes tipos de mapeo:
+		
+		\subsection{Mapeo directo}
+		
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				name & tag & line & word \\
+				\hline
+				example & FF & 6543 & 21 \\
+				\hline
+				size & remaining & $\log_2N$ & $\log_2S$ \\
+				\hline
+			\end{tabular}
+		\end{center}
+		
+		En este mapeo, \textbf{Word} define la posición de un dato dentro del bloque. \textbf{Line} la linea de cache fija donde la dirección de memoria debería situarse, y \textbf{Tag} sirve como un diferenciador. Este mapeo no permite un mejor uso de la cache con políticas de reemplazo.
+		
+		\subsection{Mapeo totalmente asociativo}
+		
+		\begin{center}
+			\begin{tabular}{|c|c|c|}
+				\hline
+				name & tag & word \\
+				\hline
+				example & FF6543 & 21 \\
+				\hline
+				size & remaining & $\log_2S$ \\
+				\hline
+			\end{tabular}
+		\end{center}
+		
+		En este mapeo solo encontramos a \textbf{Word} y \textbf{Tag}, lo cual permite una asignación dinámica de lineas con políticas de reemplazo, aunque es muy costoso de fabricar.
+		
+		\subsection{Mapeo asociativo por conjuntos}
+		
+		Considere a E como el número de conjuntos donde E es potencia de 2.
+		
+		\begin{center}
+			\begin{tabular}{|c|c|c|c|}
+				\hline
+				name & tag & set & word \\
+				\hline
+				example & FF654 & 3 & 21 \\
+				\hline
+				size & remaining & $\log_2\frac{N}{E}$ & $\log_2S$ \\
+				\hline
+			\end{tabular}
+		\end{center}
+		
+		Este mapeo ofrece un balance entre las alternativas anteriores. Se particiona la cache en E conjuntos. Cada bloque de memoria puede pertenecer solo a un conjunto fijo, pero la posición dentro del mismo es dinámica con la \textbf{Tag}. El numero de lineas por conjunto $\frac{N}{E}$ denota las \textbf{Vías} asociativas.
+		
+		{\footnotesize Más información sobre mapeos en \href{https://www.geeksforgeeks.org/computer-organization-architecture/difference-between-direct-mapping-associative-mapping-set-associative-mapping/}{Geeksforgeeks}}
+		
+		\section{Políticas de reemplazo}
+		
+		\subsection{FIFO o Round Robin}
+		
+		Asigna lineas de cache con un contador circular (Wraps on overflow). Es fácil de implementar, pero no tiene en cuanta el uso de cada linea.
+		
+		\subsection{LRU o Least Recently Used}
+		
+		Descarta lineas de cache basándose en una prioridad que denota qué tan usadas fueron. Es eficiente, aunque necesita muchos bits de control y por ende es muy costosa.
+		
+		\subsection{Aleatoria}
+		
+		Su efectividad depende de la suerte, aunque entre más lineas de cache, es menos probable descartar las más importantes.
+		
+		\section{Políticas de escritura}
+		
+		\subsection{[Hit] Write through}
+		
+		Escribe en la cache y memoria principal en paralelo. Esto aumenta el tráfico en el BUS de datos.
+		
+		\subsection{[Hit] Write back}
+		
+		Se escribe todo en la cache y solo se actualizan los datos en memoria principal cuando el bloque va a ser descartado. Requiere un bit de control \textbf{dirty}.
+		
+		\subsection{[Miss] Write allocate}
+		
+		Trae a la cache el bloque solicitado y escribe.
+		
+		\subsection{[Miss] No write allocate}
+		
+		Se escribe en memoria principal sin traer el bloque a cache.
+		
+		\section{Políticas de captación}
+		
+		\subsection{Demand}
+		
+		Cuando hay un miss en la lectura, trae el bloque solicitado a la cache.
+		
+		\subsection{Prefetch Always}
+		
+		Cuando haya una lectura traerá los bloques cercanos en hits y fallos.
+		
+		\subsection{Prefetch miss}
+		
+		Solo trae los bloques cercanos en fallos
+	\end{multicols}
+	
+\end{document}

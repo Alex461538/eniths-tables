@@ -1,0 +1,415 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.8in,
+		right=0.8in,
+		top=0.6in,
+		bottom=0.5in}
+	
+	
+	{\centering \section*{DB con arepa negra}}
+	
+	\setcounter{section}{0}
+	
+	Nunca imaginé que las bases de datos serían tan raras desde aquella vez que guardamos la carne del almuerzo en ellas. Solo un bodrio explicaría dos páginas en tres meses.
+	
+	\begin{multicols}{2}
+		\section{Creación de tablas}
+		
+		Una sintaxis de ejemplo para crear tablas:
+		\noindent
+		\begin{lstlisting}[language=sql]
+			create table slaves (
+				id serial primary key,
+				username varchar(50) unique,
+				email varchar(100) not null,
+				created_at timestamp default now(),
+				age int default 20
+			);
+		\end{lstlisting}
+		
+		\section{Consultas básicas}
+		
+		[C] Insertar registros:
+		\noindent
+		\begin{lstlisting}[language=sql]
+			insert into slaves (username, age, email)
+				values ("magumba", 23, "magumba@ucaldas.com"),
+				("jairo", 71, "jairo@ucaldas.com"),
+				("el negro del whatsapp", 40, "mostro@ucaldas.com");
+		\end{lstlisting}
+		
+		[R] Seleccionar registros:
+		\noindent
+		\begin{lstlisting}[language=sql]
+			select * from slaves;
+			
+			select * from slaves where age > 15;
+			
+			select username from slaves order by age desc;
+		\end{lstlisting}
+		
+		[U] Actualizar registros:
+		\noindent
+		\begin{lstlisting}[language=sql]
+			update slaves
+				set age = 25
+				where id = 2;
+		\end{lstlisting}
+		
+		[D] Borrar registros:
+		\noindent
+		\begin{lstlisting}[language=sql]
+			delete from slaves
+				where age = 25;
+		\end{lstlisting}
+		
+		\section{Restricciones}
+		
+		Hay muchas patico:
+		
+		\begin{itemize}
+			\item \textbf{PRIMARY KEY}: clave primaria, identifica filas de forma única.
+			\item \textbf{UNIQUE}: no se repite ese valor.
+			\item \textbf{NOT NULL}: obliga a tener valor.
+			\item \textbf{CHECK}: condición lógica.
+			\item \textbf{DEFAULT}: valor por defecto.
+			\item \textbf{REFERENCES}: llave foránea.
+		\end{itemize}
+		
+		\begin{lstlisting}[language=sql]
+			create table slaves (
+				id serial primary key, -- LLave primaria
+				username varchar(50) unique, -- Campo único
+				email varchar(100) not null, -- No nulo
+				age int default 20 check (age > 18) -- No al trabajo infantil
+				foreign key (camp_id) references camps(id), -- Llave foranea
+				created_at timestamp default now()
+			);
+		\end{lstlisting}
+		
+		\section{Compuestos}
+		
+		Clave primaria compuesta:
+		
+		\begin{lstlisting}[language=sql]
+			CREATE TABLE enrollments (
+				student_id INT,
+				course_id INT,
+				grade CHAR(2),
+				PRIMARY KEY (student_id, course_id) -- clave compuesta
+			);
+		\end{lstlisting}
+		
+		Campos compuestos únicos:
+		
+		\begin{lstlisting}[language=sql]
+			CREATE TABLE friendships (
+				user_id INT,
+				friend_id INT,
+				UNIQUE (user_id, friend_id)
+			);
+		\end{lstlisting}
+		
+		\section{Comportamientos de llave foranea}
+		
+		\textbf{No action}: (default) si hay referencias, impide borrar/actualizar.\\
+		\textbf{Restrict}: parecido a \textbf{No action}, pero se evalúa inmediatamente (no al final de la transacción)
+		
+		\begin{lstlisting}[language=sql]
+			...
+			foreign key (camp_id) 
+				references camps(id)
+				on delete cascade -- Si borra el campo, no deje
+				on update cascade, -- Si actualiza ID de campo, no deje tampoco
+			...
+		\end{lstlisting}
+		
+		\textbf{Cascade}: se propaga: si borras el padre, se borran los hijos; si actualizas, también se actualiza.
+		
+		\begin{lstlisting}[language=sql]
+			...
+			foreign key (camp_id) 
+				references camps(id)
+				on delete cascade -- Si borra el campo, sus esclavos también
+				on update cascade, -- Si actualiza ID de campo, actualiza la referencia
+			...
+		\end{lstlisting}
+		
+		\textbf{Set null}: pone el valor en NULL cuando se borra/actualiza el padre.
+		
+		\begin{lstlisting}[language=sql]
+			...
+			foreign key (camp_id) 
+				references camps(id)
+				on delete cascade -- Si borra el campo, setea a null
+				on update cascade, -- Si actualiza ID de campo, setea a null
+			...
+		\end{lstlisting}
+		
+		\textbf{Set default}: pone el valor por defecto definido en la columna.
+		
+		\begin{lstlisting}[language=sql]
+			...
+			foreign key (camp_id) 
+				references camps(id)
+				on delete set default -- Si borra el campo, setea a default
+				on update set default, -- Si actualiza ID de campo, setea a default
+			...
+		\end{lstlisting}
+		
+		\section{Dependencia funcional}
+		
+		En una relación R (una tabla), decimos que existe una dependencia funcional:
+		
+		\[
+		X \rightarrow Y
+		\]
+		
+		Sin hablar como un matemático subnormal, esto quiere decir que si tengo el valor de un campo (X), puedo determinar un único valor para otro campo (Y) con seguridad. Un ejemplo es una tabla de estudiantes con \textbf{id} y \textbf{nombre}:
+		
+		Si me dan la id de un estudiante (X), puedo saber con seguridad su nombre (Y):
+		
+		\begin{center}
+			\begin{tikzpicture}[
+				every node/.style={on grid},
+				setA/.style={fill=blue,circle,inner sep=2pt},
+				setC/.style={fill=red,rectangle,inner sep=2pt},
+				every fit/.style={draw,fill=blue!15,ellipse,text width=25pt},
+				>=latex
+				]
+				
+				% set A
+				\node (a) {$01$};
+				\node [below = of a] (b) {$02$};
+				\node [below = of b] (c) {$03$};
+				
+				\node[above=of a,anchor=south] {$ID$};
+				
+				% set B
+				\node[inner sep=0pt,right=3cm of a] (x) {$Jairo$};
+				\node[below = of x] (y) {$Maria$};
+				\node[above=of x,anchor=south] {$Nombre$};
+				
+				% the arrows
+				\draw[->,shorten >= 3pt] (a) -- (x);
+				\draw[->,shorten >= 3pt] (b) -- (x);
+				\draw[->] (c) -- (y);
+				
+				% the boxes around the sets
+				\begin{pgfonlayer}{background}
+					\node[fit= (a)  (c) ] {};
+					\node[fit= (x) (y) ] {};
+				\end{pgfonlayer}
+			\end{tikzpicture}
+			
+			$id \rightarrow nombre$
+		\end{center}
+		
+		En cambio, si me dan el nombre de un estudiante (Y), no puedo llegar a una única id, puede que esxistan Jairo de sistemas con id 01, y Jairo de artes con id 02:
+		
+		\begin{center}
+			\begin{tikzpicture}[
+				every node/.style={on grid},
+				setA/.style={fill=blue,circle,inner sep=2pt},
+				setC/.style={fill=red,rectangle,inner sep=2pt},
+				every fit/.style={draw,fill=blue!15,ellipse,text width=25pt},
+				>=latex
+				]
+				
+				% set A
+				\node (a) {$01$};
+				\node [below = of a] (b) {$02$};
+				\node [below = of b] (c) {$03$};
+				
+				\node[above=of a,anchor=south] {$ID$};
+				
+				% set B
+				\node[inner sep=0pt,left=3cm of a] (x) {$Jairo$};
+				\node[below = of x] (y) {$Maria$};
+				\node[above=of x,anchor=south] {$Nombre$};
+				
+				% the arrows
+				\draw[->,shorten >= 3pt] (x) -- (a);
+				\draw[->,shorten >= 3pt] (x) -- (b);
+				\draw[->] (y) -- (c);
+				
+				% the boxes around the sets
+				\begin{pgfonlayer}{background}
+					\node[fit= (a)  (c) ] {};
+					\node[fit= (x) (y) ] {};
+				\end{pgfonlayer}
+			\end{tikzpicture}
+			
+			$nombre \rightarrow id, no \ se \ cumple$
+		\end{center}
+		
+		\section{Dependencia parcial}
+		
+		Ocurre cuando se usan campos compuestos y un campo (Y), se puede determinar a partir de solo una parte de otro campo compuesto (X - clave primaria normalmente), por ejemplo:
+		
+		\[
+		PK(student\_id, course\_id) \rightarrow student\_name
+		\]
+		
+		En este caso sólo student\_id bastaría para determinar un student\_name específico.
+		
+		Esto sirve para formas normales y nos puede decir si un campo debería ir en una tabla separada.
+		
+		\section{Dependencia funcional completa}
+		
+		Esto ocurre al usar claves compuestas, cuando un campo (Y) solo puede determinarse usando la totalidad de otro campo compuesto (X - clave primaria normalmente), por ejemplo, en el caso de los estudiantes:
+		
+		\[
+		PK(student\_id, course\_id) \rightarrow student\_grade
+		\]
+		
+		En este caso necesitamos toda la clave primaria para determinar la calificación de curso ṕara un estudiante, en los otros casos tendremos problemas:
+		
+		\begin{itemize}
+			\item Si usamos solo student\_id, nos resulta una lista de calificaciónes para todos sus cursos inscritos, imposible saber cuál escoger.
+			\item Si usamos solo course\_id, nos resultan calificaciónes para todos los estudiantes inscritos en el curso.
+		\end{itemize}
+		
+		\section{Formas normales}
+		
+		\subsection{1NF}
+		
+		Una table está en \textbf{1NF} si cumple que:
+		
+		\begin{itemize}
+			\item Todas sus columns tienes valore atómicos (no arrays, ni info desordenada separada por comas).
+			\item Cada fila es única.
+			\item Cada columna tiene un valor único.
+			\item El orden en que se almacenan los datos no importa.
+		\end{itemize}
+		
+		\subsection{2NF}
+		
+		Una tabla está en \textbf{2NF} si está en \textbf{1NF} y no tiene \textbf{dependencias parciales}, significando que todo campo no-primo (que no sea llave) debe depender de toda la clave primaria.
+		
+		\subsection{3NF}
+		
+		Una tabla está en \textbf{3NF} si cumple la \textbf{2NF} y no hay \textbf{dependecias transitivas}, es decir, si ningún campo no-llave depende funcionalmente de otro campo no-llave.
+		
+		\section{Lecturas adicionales:}
+		
+		\href{https://www.geeksforgeeks.org/dbms/normal-forms-in-dbms/}{Las 7 formas normales.}
+	\end{multicols}
+	
+\end{document}

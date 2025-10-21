@@ -1,0 +1,297 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.8in,
+		right=0.8in,
+		top=0.9in,
+		bottom=0.5in}
+		
+	\begin{multicols}{2}
+		\begin{title-box}{moonishblue!70!white}
+			{\raggedright \large \textbf{Calculo I: Sustituciones trigonométricas} \par}
+			
+			\vspace{2mm}
+			
+			\begin{title-sign}\end{title-sign}
+			
+			\vspace{5mm}
+			
+			\emoji{crescent-moon} Una guía para integrar con triángulos. \emoji{crescent-moon}
+		\end{title-box}
+		
+		\vfill
+		
+		\begin{formula-box}
+			{\raggedright \large \textbf{Antes de comenzar} \par}
+			
+			Al momento de integrar nos encontraremos con sumas y diferencias de cuadrados. En estos casos una posible solución podría ser una sustitución trigonométrica. \par
+			\vspace{1mm}
+			Para términos de la forma no factorizable:
+			\[
+			ax^2+bx+c
+			\]
+			Se pueden completar cuadrados y aplicar la sustitución cuando sea lo más conveniente.
+		\end{formula-box}
+		
+		\begin{formula-box}
+			{\raggedright \large \textbf{Sustitución trigonométrica} \par}
+			
+			Consiste en reescribir los términos de la forma anterior a partir del teorema de Pitágoras:
+			\[
+			a^2 + b^2 = c^2
+			\]
+			
+			Con esto podremos expresar a la función en términos de un angulo $\theta$:
+			\begin{center}
+				\begin{multicols}{3}
+					\begin{tikzpicture}
+						\coordinate (a) at (0,0);
+						\coordinate (b) at (1.5,0);
+						\coordinate (c) at (1.5,1.5);
+						
+						\draw (a) -- (b) node[midway, below]{$\sqrt{a^2-x^2}$};
+						\draw (b) -- (c) node[midway, right]{x};
+						\draw (c) -- (a) node[midway, above]{a};
+						
+						\pic [draw, <->, angle radius=5mm, angle eccentricity=1.5, "$\theta$"] {angle=b--a--c};
+					\end{tikzpicture}
+					
+					{\footnotesize $x = a\sin{\theta}$}
+					
+					\columnbreak
+					
+					\begin{tikzpicture}
+						\coordinate (a) at (0,0);
+						\coordinate (b) at (1.5,0);
+						\coordinate (c) at (1.5,1.5);
+						
+						\draw (a) -- (b) node[midway, below]{x};
+						\draw (b) -- (c) node[ right, xshift=3mm, rotate=-90]{$\sqrt{x^2-a^2}$};
+						\draw (c) -- (a) node[midway, above]{a};
+						
+						\pic [draw, <->, angle radius=5mm, angle eccentricity=1.5, "$\theta$"] {angle=b--a--c};
+					\end{tikzpicture}
+					
+					\vfill
+					
+					{\footnotesize $x = a\sec{\theta}$}
+					
+					\columnbreak
+					
+					\begin{tikzpicture}
+						\coordinate (a) at (0,0);
+						\coordinate (b) at (1,0);
+						\coordinate (c) at (1,1);
+						
+						\draw (a) -- (b) node[midway, below]{a};
+						\draw (b) -- (c) node[midway, right]{x};
+						\draw (c) -- (a) node[midway, above, rotate=45]{$\sqrt{a^2+x^2}$};
+						
+						\pic [draw, <->, angle radius=5mm, angle eccentricity=1.5, "$\theta$"] {angle=b--a--c};
+					\end{tikzpicture}
+					
+					\vfill
+					
+					{\footnotesize $x = a\tan{\theta}$}
+				\end{multicols}
+			\end{center}
+			
+			Cambiando a $x$ y $a$ de lugar se puede trabajar con las otras tres funciones trigonométricas mas.
+			
+			Al final la mejor sustitución dependerá del problema, sin embargo, comúnmente se calculan $x$ y $dx$ así como la suma o diferencia de cuadrados con respecto a $\theta$.
+		\end{formula-box}
+		
+		\columnbreak
+		
+		\begin{cut-me-box}
+			{\raggedright \large \textbf{"La tabla 11"} \par}
+			
+			¿Alguna vez te ha pasado que no puedes memorizar todas esas tablas de integrales? Al final resulta que con un poco de sustituciones esto no es necesario.
+			
+			\begin{center}
+				\emoji{fire} ¿Cómo resolverías esta integral? \emoji{fire}
+			\end{center}
+			
+			\[\int \frac{1}{\sqrt{x^2+1}} dx\]
+			
+			Primero construimos un triangulo rectángulo a partir de la suma de cuadrados que encontramos:
+			
+			\setlength{\columnsep}{-2cm} % Ajusta solo para este bloque
+			
+			\begin{multicols}{2}
+				
+				\begin{tikzpicture}
+					\coordinate (a) at (0,0);
+					\coordinate (b) at (2,0);
+					\coordinate (c) at (2,2);
+					
+					\draw (a) -- (b) node[midway, below]{1};
+					\draw (b) -- (c) node[midway, right]{x};
+					\draw (c) -- (a) node[midway, above, rotate=45]{$\sqrt{x^2+1}$};
+					
+					\pic [draw, <->, angle radius=5mm, angle eccentricity=1.5, "$\theta$"] {angle=b--a--c};
+				\end{tikzpicture}
+				
+				\columnbreak
+				
+				Se realizan los cálculos con las funciones que más nos convengan:
+				\[
+				\begin{array}{c}
+					\tan \theta = x, \quad
+					\sec^2 \theta d\theta = dx \\
+					\sec \theta = \sqrt{x^2+1} \\
+				\end{array}
+				\]
+			\end{multicols}
+			
+			Reemplazamos lo que calculamos en la integral:
+			
+			\[
+			\int \frac{1}{\sec \theta} \sec^2\theta d\theta = 
+			\int \sec \theta d\theta
+			\]
+			
+			Resolvemos la integral resultante:
+			
+			\[
+			\int \sec \theta d\theta = 
+			\]
+			\[
+			\int \sec \theta \frac{\sec\theta + \tan\theta}{\tan\theta + \sec\theta} d\theta =
+			\int \frac{\sec^2\theta + \sec\theta\tan\theta}{\tan\theta + \sec\theta} d\theta
+			\]
+			
+			¿Notaste algún patrón? Ahora podemos hacer una sustitución simple:
+			\[
+			\begin{array}{c}
+				Sust. \quad u = \tan\theta + \sec\theta \\
+				\quad du = \sec^2\theta + \sec\theta\tan\theta d\theta
+			\end{array}
+			\]
+			\[
+			\int \frac{du}{u} = \ln| u | = \ln| \tan\theta + \sec\theta | + C
+			\]
+			Por ultimo deshacemos las sustituciones hasta llegar a términos de $x$:
+			\[
+			\ln| x + \sqrt{x^2+1} | + C
+			\]
+		\end{cut-me-box}
+	\end{multicols}
+	
+	
+\end{document}
