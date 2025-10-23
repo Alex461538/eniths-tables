@@ -1,0 +1,326 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.8in,
+		right=0.8in,
+		top=0.9in,
+		bottom=0.9in}
+	
+	{\centering \section*{Parseo de expresiones con arboles (Ella no aprende)}}
+	
+	Si alguna vez han rechazado tu algoritmo de parseo de expresiones por no tener pila... ¡no te preocupes! Un día se me ocurrió en paint este algoritmo que usa árboles y es muy eficiente. Si ya existía seguro fue olvidado, seguro el autor está muerto, no es importante.
+	
+	\setcounter{section}{0}
+	
+	\begin{multicols}{2}
+		\section{Antes de comenzar...}
+		
+		Primero considera que usaremos un arbol binario tradicional, donde el valor de cada nodo es de tipo token.
+		Además, tienes una lista de tokens: operadores binarios con una prioridad, y simbolos.
+		
+		\[
+		\begin{array}{c}
+			tokens = [\{"name": "1", "type":TK\_ID, "prior":0\}, \\
+			\{"name": "+", "type":TK\_OPR, "prior":1\} ...]
+		\end{array}
+		\]
+		
+		Luego añadir unarios, errores y parentesis es notablemente natural.
+		
+		\section{Pseudocódigo}
+		
+		La eficiencia de esto es casi lineal, con el detalle del bucle, en el peor de los casos sospecho que esto da un poco menos de $P * n$ pasos, donde $P$ son todas las prioridades diferentes que se manejan.
+		
+		\begin{lstlisting}[language=python]
+			tree = tokens[0]
+			root = tree
+			for token in tokens[1...n]:
+				# Empuja abajo a la izquierda
+				if token is operator:
+					next = Node(token)
+					next.left = root
+					root = next
+				else if token is operand and not root.right:
+					# Asigna el hijo derecho
+					root.right = token
+					aux = root
+					while aux and aux.left are operators and aux.left.priority > aux.priority:
+						# Rota hacia la derecha
+						old = aux
+						aux = aux.left
+						old.left = aux.right
+						aux.right = old
+						# Profundiza
+						aux = aux.right
+		\end{lstlisting}
+		
+		\section{A practicar}
+		
+		Supongamos que tenemos estos tokens: $a,*,b,+,c,*,d$, y las prioridades de $+$ y $*$ son $1$ y $0$ respectivamente:
+		
+		\begin{center}
+			[1]: Añade el primer token.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (1) {a};
+			\end{tikzpicture}
+			
+			[2]: Añade un operador, empuja abajo izquierda.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (L) {*};
+				\node (1) [below left=0.5cm of L] {a};
+				
+				\draw [->] (L) -- (1);
+			\end{tikzpicture}
+			
+			\columnbreak
+			
+			[3]: Añade un operando, no hay rotación.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (L) {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+			\end{tikzpicture}
+			
+			\vspace{1mm}
+			
+			[4]: Añade un operador, empuja abajo izquierda.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (M) {+};
+				
+				\node (L) [below left=0.5cm of M] {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\draw [->] (M) -- (L);
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+			\end{tikzpicture}
+			
+			\vspace{1mm}
+			
+			[5]: Añade un operando, no hay rotación.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (M) {+};
+				
+				\node (L) [below left=0.5cm of M] {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\node (3) [below right=0.5cm of M] {c};
+				
+				\draw [->] (M) -- (L);
+				\draw [->] (M) -- (3);
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+			\end{tikzpicture}
+			
+			\vspace{1mm}
+			
+			[6]: Añade un operador, empuja abajo izquierda.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (S) {*};
+				
+				\node (M) [below left=0.5cm of S] {+};
+				
+				\node (L) [below left=0.5cm of M] {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\node (3) [below right=0.5cm of M] {c};
+				
+				\draw [->] (S) -- (M);
+				
+				\draw [->] (M) -- (L);
+				\draw [->] (M) -- (3);
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+			\end{tikzpicture}
+			
+			\vspace{1mm}
+			
+			[7]: Añade un operando, hay una rotación.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (S) {*};
+				
+				\node (M) [below left=0.5cm of S] {+};
+				
+				\node (L) [below left=0.5cm of M] {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\node (3) [below right=0.5cm of M] {c};
+				\node (4) [below right=0.5cm of S] {d};
+				
+				\draw [->] (S) -- (M);
+				
+				\draw [->] (M) -- (L);
+				\draw [->] (M) -- (3);
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+				
+				\draw [->] (S) -- (4);
+				
+				\draw[->, dashed] (M) .. controls +(up:1.7cm) and +(up:1.7cm) .. (4);
+				
+			\end{tikzpicture}
+			
+			\vspace{1mm}
+			
+			[8] No hay más rotación, no hay más tokens, termina.
+			
+			\begin{tikzpicture}[node distance=2cm, every node/.style={circle, draw, minimum size=7mm}]
+				\node (M) {+};
+				
+				\node (L) [below left of=M] {*};
+				\node (1) [below left=0.5cm of L] {a};
+				\node (2) [below right=0.5cm of L] {b};
+				
+				\node (R) [below right of=M] {*};
+				\node (3) [below left=0.5cm of R] {c};
+				\node (4) [below right=0.5cm of R] {d};
+				
+				\draw [->] (M) -- (L);
+				\draw [->] (M) -- (R);
+				
+				\draw [->] (L) -- (1);
+				\draw [->] (L) -- (2);
+				
+				\draw [->] (R) -- (3);
+				\draw [->] (R) -- (4);
+			\end{tikzpicture}
+		\end{center}
+		
+		
+	\end{multicols}
+\end{document}
