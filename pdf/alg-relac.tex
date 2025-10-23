@@ -1,0 +1,207 @@
+% !TeX TS-program = lualatex
+\documentclass{article}
+\usepackage{pgfplots}
+\usepackage{csquotes}
+\usepackage{fontspec}
+\usepackage[a4paper]{geometry}
+\usepackage{babel}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{lstautogobble}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage[colorlinks=true, linkcolor=moonishblue, urlcolor=moonishblue]{hyperref}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{emoji}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\definecolor{moonishblue}{RGB}{96, 30, 255}
+
+\usetikzlibrary{arrows, positioning, shapes, fit, calc, angles, quotes}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+
+
+
+\title{Una práctica ingeniosa para enseñar de todo. Más facil que tu hermana.}
+
+\author{Los tres hijueputas del oriente}
+
+% MapoGoldenPier
+
+\newfontfamily\koreanfont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = MapoGoldenPier
+]{}
+
+\newfontfamily\chinesefont[
+Path = ./fonts/, % Adjust this if the folder is different
+Extension = .ttf,
+UprightFont = NotoSerifTC-SemiBold
+]{}
+
+\newcommand{\chin}[1]{{\chinesefont #1}}
+
+\newcommand{\kor}[1]{{\koreanfont #1}}
+
+\NewDocumentEnvironment{title-sign}{o}{%
+	{\large \textbf{\href{https://www.youtube.com/@Pianitas38}{Alex} - \today}}%
+}{}
+
+\newenvironment{formula-box}{
+	\begin{tcolorbox}[
+		colframe=black, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		boxrule=1pt, % grosor del borde
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{title-box}[1]{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{#1,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\newenvironment{cut-me-box}{
+	\begin{tcolorbox}[
+		colframe=white, % color del borde
+		colback=white, % color del fondo
+		arc=1mm, % radio de las esquinas redondeadas
+		left=2mm, % padding izquierdo
+		right=2mm, % padding derecho
+		top=2mm, % padding superior
+		bottom=2mm, % padding inferior
+		borderline={0.5mm}{0mm}{black!70!white,dashed},
+		enhanced,
+		boxrule=0.5mm,
+		overlay={
+			\node[anchor=north, yshift=-1mm, fill=white] at (frame.north east) {\large \emoji{scissors}}; % Coloca el emoji sobre el borde superior
+		}
+		]
+	}{
+	\end{tcolorbox}
+}
+
+\lstset{
+	xleftmargin=0pt,
+	framexleftmargin=0pt,
+	autogobble=true,
+	linewidth=\linewidth,
+	breaklines=true,
+	columns=fullflexible,
+	basicstyle=\small,
+}
+
+\begin{document}
+	
+	\newgeometry{left=0.7in,
+		right=0.7in,
+		top=0.9in,
+		bottom=0.5in}
+	
+	{\centering \section*{DBs: Álgebra relacional}}
+	
+	Yo diría que el álgebra relacional se trata de una notación más o menos estandar y oscura para expresar consultas en bases de datos. Un ejemplo más de la amargura que nos traen los matemáticos.
+	
+	\setcounter{section}{0}
+	
+	\begin{multicols}{2}
+		\section{Operadores relacionales?}
+		
+		\subsection{Selección}
+		
+		El equivalente perfecto de un SELECT, simplemente selecciona registros de un conjunto a partir de una condición.
+		\[
+		\sigma \text{ condición } ( datos )
+		\]
+
+		\subsection{Proyección}
+		
+		Es una variante de la selección, no tiene ninguna condición, pero te permite seleccionar los campos que desees de tus registros y elimina los duplicados resultantes.
+		\[
+		\pi \text{ campos,... } ( datos )
+		\]
+		
+		\subsection{Renombre}
+		
+		Más orientada a la facilidad de manejo, se encarga de renombrar tablas o sus atributos.
+		\[
+		\begin{array}{c}
+			\rho \text{ } nombre\_tabla( nombre\_campo,... ) (datos) \\
+			\rho \text{ } nombre\_tabla (datos) \\
+			\rho \text{ } campo \rightarrow nombre\_campo,... (datos)
+		\end{array}
+		\]
+		
+		\subsection{Ordenamiento}
+		
+		No muy diferente a un ORDER BY, simplemente ordena datos por una columna.
+		\[
+		\tau \text{ columna asc|desc } (datos)
+		\]
+		
+		\subsection{Agrupación}
+		
+		Similar al GROUP BY, agrupa datos de acuerdo al valor de una columna y les aplica una función.
+		\[
+		\gamma \text{ } col,...; funcion(columna_2) \rightarrow col\_resultado (datos)
+		\]
+		Algunas de las funciones más comunes que se pueden utilizar aquí son:
+		
+		\begin{itemize}
+			\item \textbf{count(columna):} Devuelve la cantidad de valores no nulos en la columna recibida, y en SQL puede juntarse con la palabra clave DISTINCT para ignorar duplicados.
+			\item \textbf{sum(columna):} Calcula la suma de los valores de la columna recibida.
+			\item \textbf{avg(columna):} Retorna el promedio de los datos en la columna recibida.
+		\end{itemize}
+		
+		\section{Operadores de conjuntos}
+		
+		\subsection{Intersección}
+		\subsection{Unión}
+		\subsection{División}
+		\subsection{Diferencia}
+		
+		\section{Joins}
+		
+		\subsection{Cross join}
+		
+		\subsection{Natural join}
+		
+		\subsection{Outer join}
+		
+		\subsubsection{Izquierdo (Left)}
+		\subsubsection{Derecho (Right)}
+		\subsubsection{Completo (Full)}
+		
+		\subsection{Semi join}
+		
+		\subsubsection{Izquierdo (Left)}
+		\subsubsection{Derecho (Right)}
+		
+		\subsection{Anti join}
+	
+	\end{multicols}
+	
+\end{document}
